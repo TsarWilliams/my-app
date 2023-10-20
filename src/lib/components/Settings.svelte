@@ -1,3 +1,22 @@
+<script context="module" lang="ts">
+  import { storable } from '$utils';
+
+  const settingsData: Record<string, {
+    name: string,
+    description: string,
+    default: boolean,
+  }> = {
+    dyslexicFont: {
+      name: 'Dyslexic Font',
+      description: 'Forces the use of a dyslexic font',
+      default: true,
+    },
+  };
+
+  const defaults = Object.fromEntries(Object.keys(settingsData).map((s) => [s, settingsData[s].default]));
+  export const settings = storable<Record<string, boolean>>(defaults);
+</script>
+
 <script lang="ts">
   import {
     Dialog,
@@ -8,39 +27,43 @@
     SwitchLabel,
     Switch,
   } from '@rgossiaux/svelte-headlessui';
-  let isOpen = true;
-  let completeButton: HTMLButtonElement;
-
-  let enabled = true;
+  export let isOpen = true;
 </script>
 
 <Dialog style="isolation: isolate" open={isOpen} on:close={() => (isOpen = false)}>
-  <DialogOverlay style="position: fixed; inset: 0; z-index: -1; background-color: rgba(0, 0, 0, 0.6)" />
+  <DialogOverlay
+    style="position: fixed; inset: 0; z-index: -1; background-color: rgba(0, 0, 0, 0.6)"
+  />
 
   <div class="contents">
     <DialogTitle><h1>Lorem Ipsum</h1></DialogTitle>
     <DialogDescription>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque optio aliquid ipsa facere odio quibusdam eaque dolor consectetur labore voluptas voluptates nesciunt minima, saepe at delectus! Voluptas consectetur ex dolores unde amet sunt modi, veniam nam quas voluptatum eaque voluptate!
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque optio
+      aliquid ipsa facere odio quibusdam eaque dolor consectetur labore voluptas
+      voluptates nesciunt minima, saepe at delectus! Voluptas consectetur ex dolores
+      unde amet sunt modi, veniam nam quas voluptatum eaque voluptate!
     </DialogDescription>
-    <SwitchGroup>
-      <div class="switch-container">
-        <SwitchLabel class="switch-label">Dyslexic Font</SwitchLabel>
-        <Switch
-          bind:checked={enabled}
-          class={enabled ? 'switch switch-enabled' : 'switch switch-disabled'}
-        >
-          <span class="sr-only">{enabled ? 'Disable' : 'Enable'} notifications</span>
-          <span
-            class="toggle"
-            class:toggle-on={enabled}
-            class:toggle-off={!enabled}
-          />
-        </Switch>
-      </div>
-    </SwitchGroup>
-    <div>
-      <h2>Press outside the box to close this window.</h2>
-    </div>
+    {#each Object.keys($settings) as name}
+      {@const capitalizedName = name[0].toUpperCase() + name.slice(1)}
+      {@const value = $settings[name]}
+      <SwitchGroup>
+        <div class="switch-container">
+          <SwitchLabel class="switch-label">{capitalizedName}</SwitchLabel>
+          <Switch
+            bind:checked={$settings[name]}
+            class={value ? 'switch switch-enabled' : 'switch switch-disabled'}
+          >
+            <span class="sr-only">{value ? 'Disable' : 'Enable'} {capitalizedName}</span>
+            <span
+              class="toggle"
+              class:toggle-on={value}
+              class:toggle-off={!value}
+            />
+          </Switch>
+        </div>
+      </SwitchGroup>
+    {/each}
+    <button on:click={() => (isOpen = false)}>Exit Settings</button>
   </div>
 </Dialog>
 
