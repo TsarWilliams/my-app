@@ -68,7 +68,8 @@
     border-radius: 9999px;
     height: 1.5em;
     width: 2.75em;
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-property: color, background-color, border-color, text-decoration-color,
+      fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 300ms;
   }
@@ -86,23 +87,11 @@
     background-color: rgb(235, 50, 37);
   }
 
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-
   .toggle {
     display: inline-block;
     width: 1em;
     height: 1em;
-    background-color: rgb(255 255 255);
+    background-color: white;
     border-radius: 9999px;
     transition-property: transform;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
