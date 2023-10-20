@@ -1,5 +1,10 @@
 <script>
   import './styles.css';
+
+  import { browser } from '$app/environment';
+  import { settings } from '$lib/components/Settings.svelte';
+
+  $: browser && document.documentElement.classList.toggle('dyslexic-font', $settings.dyslexicFont);
 </script>
 
 <div class="app">

@@ -1,6 +1,7 @@
 <script context="module" lang="ts">
   import { storable } from '$utils';
 
+  // TODO: Make this more typesafe (make this const)
   const settingsData: Record<string, {
     name: string,
     description: string,
@@ -14,7 +15,7 @@
   };
 
   const defaults = Object.fromEntries(Object.keys(settingsData).map((s) => [s, settingsData[s].default]));
-  export const settings = storable<Record<string, boolean>>(defaults);
+  export const settings = storable<Record<keyof typeof settingsData, boolean>>(defaults, 'settings');
 </script>
 
 <script lang="ts">
