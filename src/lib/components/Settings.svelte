@@ -77,56 +77,59 @@
     background-color: white;
   }
 
-  .switch-container {
+  :global(.switch-container) {
+    display: grid;
+    grid-template-areas: "name switch"
+                         "description switch";
     font-size: 1.25em;
   }
 
   :global(.switch-label) {
+    grid-area: name;
     margin-right: 1rem;
   }
 
   :global(.switch) {
+    --padding: calc(1rem / 3);
+
+    grid-area: switch;
     position: relative;
     display: inline-flex;
     align-items: center;
-    border-radius: 9999px;
+    padding: var(--padding);
     height: 1.5em;
     width: 2.75em;
-    transition-property: color, background-color, border-color, text-decoration-color,
-      fill, stroke;
+    border: none;
+    border-radius: 1.5em;
+    transition-property: background-color;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 300ms;
   }
-
   :global(.switch:focus) {
     outline: 2px solid transparent;
     outline-offset: 2px;
   }
-
   :global(.switch-enabled) {
     background-color: rgb(44, 235, 37);
   }
-
   :global(.switch-disabled) {
     background-color: rgb(235, 50, 37);
   }
 
   .toggle {
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    position: absolute;
+    inset: var(--padding);
+    height: calc(100% - var(--padding) * 2);
+    aspect-ratio: 1;
+    border-radius: 1em;
+    transition-property: all;
+    transition-timing-function: inherit;
+    transition-duration: inherit;
     background-color: white;
-    border-radius: 9999px;
-    transition-property: transform;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
   }
-
   .toggle-on {
-    transform: translateX(1.25em);
-  }
-
-  .toggle-off {
-    transform: translateX(0em);
+    left: 100%;
+    translate: calc(-100% - var(--padding));
   }
 </style>
