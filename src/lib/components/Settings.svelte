@@ -37,18 +37,10 @@
 </script>
 
 <Dialog style="isolation: isolate" open={isOpen} on:close={() => (isOpen = false)}>
-  <DialogOverlay
-    style="position: fixed; inset: 0; z-index: -1; background-color: rgba(0, 0, 0, 0.6)"
-  />
+  <DialogOverlay style="position: fixed; inset: 0; z-index: -1; background-color: hsl(0 0% 0% / 0.6)" />
 
   <div class="contents">
-    <DialogTitle><h1>Lorem Ipsum</h1></DialogTitle>
-    <DialogDescription>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque optio
-      aliquid ipsa facere odio quibusdam eaque dolor consectetur labore voluptas
-      voluptates nesciunt minima, saepe at delectus! Voluptas consectetur ex dolores
-      unde amet sunt modi, veniam nam quas voluptatum eaque voluptate!
-    </DialogDescription>
+    <DialogTitle class="settings-title">Settings</DialogTitle>
     {#each settingsKeys() as name}
       {@const value = $settings[name]}
       {@const data = settingsData[name]}
@@ -68,7 +60,12 @@
         </Switch>
       </SwitchGroup>
     {/each}
-    <button on:click={() => (isOpen = false)}>Exit Settings</button>
+    <footer>
+      <button
+        class="close"
+        on:click={() => (isOpen = false)
+      }>Close Settings</button>
+    </footer>
   </div>
 </Dialog>
 
@@ -77,26 +74,30 @@
     position: fixed;
     inset: 20%;
     padding: 2rem;
-    text-align: center;
     background-color: white;
+  }
+
+  :global(.settings-title) {
+    text-align: center;
+    font-size: 2em;
+    margin-block-end: 1rem;
   }
 
   :global(.switch-container) {
     display: grid;
     grid-template-areas: "name switch"
                          "description switch";
-    font-size: 1.25em;
   }
 
   :global(.switch-label) {
     grid-area: name;
-    margin-right: 1rem;
   }
 
   :global(.switch) {
     --padding: calc(1rem / 3);
 
     grid-area: switch;
+    place-self: center end;
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -114,12 +115,11 @@
     outline-offset: 2px;
   }
   :global(.switch-enabled) {
-    background-color: rgb(44, 235, 37);
+    background-color: hsl(118, 83%, 53%);
   }
   :global(.switch-disabled) {
-    background-color: rgb(235, 50, 37);
+    background-color: hsl(4, 83%, 53%);
   }
-
   .toggle {
     display: inline-block;
     position: absolute;
@@ -135,5 +135,25 @@
   .toggle-on {
     left: 100%;
     translate: calc(-100% - var(--padding));
+  }
+
+  :global(.switch-description) {
+    font-size: 0.8em;
+  }
+
+  /* TODO: Make this less hacky (ie don't use position absolute) */
+  footer {
+    display: grid;
+    justify-content: end;
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 1rem;
+    background-color: hsl(0 0% 0% / 0.1);
+  }
+
+  .close {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: hsl(4, 83%, 53%);
   }
 </style>

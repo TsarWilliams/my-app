@@ -1,3 +1,4 @@
+@import 'the-new-css-reset/css/reset.css';
 @import '@fontsource/opendyslexic';
 
 :root {
@@ -30,24 +31,11 @@
 
 body {
   min-height: 100vh;
-  margin: 0;
-  background-attachment: fixed;
   background-color: var(--color-bg-1);
-  background-size: 100vw 100vh;
-  background-image: radial-gradient(50% 50% at 50% 50%,
-      rgba(255, 255, 255, 0.75) 0%,
-      rgba(255, 255, 255, 0) 100%),
-    linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%, var(--color-bg-2) 50%);
 }
 
-h1,
-h2,
-p {
-  font-weight: 400;
-}
-
-p {
-  line-height: 1.5;
+* {
+  line-height: calc(1em + 0.5rem);
 }
 
 a {
@@ -66,17 +54,6 @@ h1 {
 
 h2 {
   font-size: 1rem;
-}
-
-pre {
-  font-size: 16px;
-  font-family: monospace;
-  background-color: rgba(255, 255, 255, 0.45);
-  border-radius: 3px;
-  box-shadow: 2px 2px 6px rgb(255 255 255 / 25%);
-  padding: 0.5em;
-  overflow-x: auto;
-  color: var(--color-text);
 }
 
 .text-column {
