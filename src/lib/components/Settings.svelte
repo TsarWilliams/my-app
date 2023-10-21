@@ -1,21 +1,25 @@
 <script context="module" lang="ts">
+  import { get } from 'svelte/store';
   import { storable } from '$utils';
 
-  // TODO: Make this more typesafe (make this const)
-  const settingsData: Record<string, {
-    name: string,
-    description: string,
-    default: boolean,
-  }> = {
+  const defaults = {
+    dyslexicFont: true,
+  } as const;
+  type Setting = keyof typeof defaults;
+
+  const settingsData = {
     dyslexicFont: {
       name: 'Dyslexic Font',
-      description: 'Forces the use of a dyslexic font',
-      default: true,
+      description: 'Forces the use of a dyslexic font'
     },
-  };
+  } as const satisfies Record<Setting, {
+    name: string,
+    description: string,
+  }>;
 
-  const defaults = Object.fromEntries(Object.keys(settingsData).map((s) => [s, settingsData[s].default]));
-  export const settings = storable<Record<keyof typeof settingsData, boolean>>(defaults, 'settings');
+  export const settings = storable<Record<Setting, boolean>>(defaults, 'settings');
+
+  const settingsKeys = () => Object.keys(get(settings)) as Setting[]; // 😭
 </script>
 
 <script lang="ts">
@@ -27,6 +31,7 @@
     SwitchGroup,
     SwitchLabel,
     Switch,
+    SwitchDescription,
   } from '@rgossiaux/svelte-headlessui';
   export let isOpen = true;
 </script>
@@ -44,24 +49,23 @@
       voluptates nesciunt minima, saepe at delectus! Voluptas consectetur ex dolores
       unde amet sunt modi, veniam nam quas voluptatum eaque voluptate!
     </DialogDescription>
-    {#each Object.keys($settings) as name}
-      {@const capitalizedName = name[0].toUpperCase() + name.slice(1)}
+    {#each settingsKeys() as name}
       {@const value = $settings[name]}
-      <SwitchGroup>
-        <div class="switch-container">
-          <SwitchLabel class="switch-label">{capitalizedName}</SwitchLabel>
-          <Switch
-            bind:checked={$settings[name]}
-            class={value ? 'switch switch-enabled' : 'switch switch-disabled'}
-          >
-            <span class="sr-only">{value ? 'Disable' : 'Enable'} {capitalizedName}</span>
-            <span
-              class="toggle"
-              class:toggle-on={value}
-              class:toggle-off={!value}
-            />
-          </Switch>
-        </div>
+      {@const data = settingsData[name]}
+      <SwitchGroup class="switch-container">
+        <SwitchLabel class="switch-label">{data.name}</SwitchLabel>
+        <SwitchDescription class="switch-description">{data.description}</SwitchDescription>
+        <Switch
+          bind:checked={$settings[name]}
+          class={value ? 'switch switch-enabled' : 'switch switch-disabled'}
+        >
+          <span class="sr-only">{value ? 'Disable' : 'Enable'} {data.name}</span>
+          <span
+            class="toggle"
+            class:toggle-on={value}
+            class:toggle-off={!value}
+          />
+        </Switch>
       </SwitchGroup>
     {/each}
     <button on:click={() => (isOpen = false)}>Exit Settings</button>
